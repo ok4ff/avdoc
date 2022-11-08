@@ -4,7 +4,7 @@ RUN apk --no-cache add ca-certificates
 
 WORKDIR /go/src/app
 
-COPY go.mod ./
+COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
 
@@ -20,8 +20,6 @@ WORKDIR /usr/local/bin/
 
 COPY --from=builder /go/src/app/avdoc .
 
-RUN pacman -Suy --noconfirm 
-
-RUN pacman -S --needed --noconfirm git base-devel npm nodejs lazygit ncdu htop neovim ripgrep
+RUN pacman -Suy --noconfirm && pacman -S --needed --noconfirm git base-devel npm nodejs go lazygit ncdu htop neovim ripgrep sudo
 
 CMD [ "./avdoc" ]

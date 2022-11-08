@@ -7,12 +7,23 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/spf13/viper"
 )
 
 func Run() {
 	log.Printf("Container started...")
 
-	if err := arch.Init(arch.Config{}); err != nil {
+	if err := initConfig(); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := arch.Init(arch.Config{
+		Username: viper.GetString("user.name"),
+		Workdir:  viper.GetString("user.workdir"),
+		Shell:    viper.GetString("user.shell"),
+		Package:  viper.GetString("arch.package"),
+	}); err != nil {
 		log.Fatal(err)
 	}
 
